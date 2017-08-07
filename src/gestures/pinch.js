@@ -1,10 +1,14 @@
-export default function pinchable (sprite, inertia) {
+export default function pinchable(sprite, inertia) {
 
-  function start (e) {
+  function start(e) {
     sprite.on('touchmove', move)
   }
 
-  function move (e) {
+  function move(e) {
+    if (!e.data.originalEvent.targetTouches) {
+      return
+    }
+
     let t = e.data.originalEvent.targetTouches
     if (!t || t.length < 2) {
       return
@@ -48,7 +52,7 @@ export default function pinchable (sprite, inertia) {
     }
   }
 
-  function end (e) {
+  function end(e) {
     sprite.removeListener('touchmove', move)
     if (!sprite._pinch) {
       return

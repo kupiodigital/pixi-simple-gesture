@@ -1,14 +1,15 @@
-export default function panable (sprite, inertia) {
-
-  function mouseDown (e) {
+export default function panable(sprite, inertia) {
+  function mouseDown(e) {
     start(e.data.originalEvent)
   }
 
-  function touchStart (e) {
-    start(e.data.originalEvent.targetTouches[0])
+  function touchStart(e) {
+    if (e.data.originalEvent.targetTouches && e.data.originalEvent.targetTouches[0]) {
+      start(e.data.originalEvent.targetTouches[0])
+    }
   }
 
-  function start (t) {
+  function start(t) {
     if (sprite._pan) {
       if (!sprite._pan.intervalId) {
         return
@@ -28,11 +29,11 @@ export default function panable (sprite, inertia) {
       .on('touchmove', touchMove)
   }
 
-  function mouseMove (e) {
+  function mouseMove(e) {
     move(e, e.data.originalEvent)
   }
 
-  function touchMove (e) {
+  function touchMove(e) {
     let t = e.data.originalEvent.targetTouches
     if (!t || t.length > 1) {
       end(e, t[0])
@@ -41,7 +42,7 @@ export default function panable (sprite, inertia) {
     move(e, t[0])
   }
 
-  function move (e, t) {
+  function move(e, t) {
     let now = new Date()
     let interval = now - sprite._pan.p.date
     if (interval < 12) {
@@ -78,15 +79,15 @@ export default function panable (sprite, inertia) {
     }
   }
 
-  function mouseUp (e) {
+  function mouseUp(e) {
     end(e, e.data.originalEvent)
   }
 
-  function touchEnd (e) {
+  function touchEnd(e) {
     end(e, e.data.originalEvent.changedTouches[0])
   }
 
-  function end (e, t) {
+  function end(e, t) {
     sprite
       .removeListener('mousemove', mouseMove)
       .removeListener('touchmove', touchMove)

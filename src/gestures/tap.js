@@ -1,14 +1,16 @@
-export default function tappable (sprite) {
-  function mouseDown (e) {
+export default function tappable(sprite) {
+  function mouseDown(e) {
     start(e, e.data.originalEvent)
   }
 
-  function touchStart (e) {
-    start(e, e.data.originalEvent.targetTouches[0])
+  function touchStart(e) {
+    if (e.data.originalEvent.targetTouches && e.data.originalEvent.targetTouches[0]) {
+      start(e, e.data.originalEvent.targetTouches[0])
+    }
   }
 
   // possibly be called twice or more
-  function start (e, t) {
+  function start(e, t) {
     if (sprite._tap) {
       return
     }
@@ -23,11 +25,11 @@ export default function tappable (sprite) {
       .on('touchmove', touchMove)
   }
 
-  function mouseMove (e) {
+  function mouseMove(e) {
     move(e, e.data.originalEvent)
   }
 
-  function touchMove (e) {
+  function touchMove(e) {
     let t = e.data.originalEvent.targetTouches
     if (!t || t.length > 1) {
       sprite._tap.canceled = true
@@ -37,7 +39,7 @@ export default function tappable (sprite) {
     move(e, t[0])
   }
 
-  function move (e, t) {
+  function move(e, t) {
     let dx = t.clientX - sprite._tap.p.x
     let dy = t.clientY - sprite._tap.p.y
     let distance = Math.sqrt(dx * dx + dy * dy)
@@ -48,7 +50,7 @@ export default function tappable (sprite) {
   }
 
   // possibly be called twice or more
-  function end (e) {
+  function end(e) {
     if (sprite._tap && !sprite._tap.canceled) {
       let event = {
         data: e.data
